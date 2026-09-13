@@ -1,5 +1,6 @@
 const state = { rawData: null };
 let barChart = null;
+let pieChart = null;
 
 async function loadData() {
     $('#status').text("加载中...").show();
@@ -19,6 +20,7 @@ async function loadData() {
 
         renderRoomCards(jsonData.rooms);
         renderBuildingBar(jsonData.rooms);
+        renderStatusPie(jsonData.rooms);
 
     } catch (err) {
         $('#status').text("加载失败：" + err.message).show();
@@ -42,6 +44,9 @@ function renderRoomCards(roomList) {
       </div>
     </div>
     `);
+    });
+    $('#room-cards').on('click', '.room-card', function () {
+        $(this).toggleClass("border-primary shadow");
     });
 }
 
@@ -71,6 +76,40 @@ function renderBuildingBar(rooms) {
         ]
     });
 }
+
+function renderStatusPie(rooms) {
+    if (pieChart !== null) {
+        pieChart.destroy();
+    }
+    let openCnt = 0, repairCnt = 0, closeCnt = 0;
+    rooms.forEach(r => {
+        if (r.status === "开放") openCnt++;
+        else if (r.status === "维修") repairCnt++;
+        else if (r.status === "闭馆") closeCnt++;
+    });
+    const ctx = document.querySelector("#status-pie");
+    pieChart = new Chart(ctx, {
+        type: "pie",
+        data: {
+            labels: ["开放", "维修", "闭馆"],
+            datasets: [{
+                data: [openCnt, repairCnt, closeCnt]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: { display: true, text: "自习室房间状态分布" },
+                legend: { position: "bottom" }
+            }
+        }
+    });
+}
+
+window.addEventListener('resize', () => {
+    if (barChart) barChart.resize();
+});
 
 $(function () {
     loadData();
