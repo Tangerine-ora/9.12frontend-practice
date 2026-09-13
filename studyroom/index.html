@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>校园自习室数据看板</title>
+  <link href="libs/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .chart-box {
+      height: 360px;
+    }
+
+    #status {
+      display: none;
+    }
+
+    .room-card {
+      cursor: pointer;
+      transition: 0.2s;
+    }
+  </style>
+</head>
+
+<body class="container py-4">
+  <header>
+    <h1 class="h3">校园自习室数据看板</h1>
+    <p class="text-muted" id="source-text"></p>
+  </header>
+
+  <p id="status" class="alert alert-warning"></p>
+
+  <section class="row g-3 mb-5" id="room-cards"></section>
+
+  <!-- 图表容器占位，暂未实现绘图逻辑 -->
+  <section class="row g-4">
+    <div class="col-lg-6">
+      <h2 class="h5">各楼宇总座位数对比（ECharts柱状图）</h2>
+      <div id="building-bar" class="chart-box"></div>
+    </div>
+    <div class="col-lg-6">
+      <h2 class="h5">自习室房间状态占比（Chart.js饼图）</h2>
+      <div class="chart-box">
+        <canvas id="status-pie"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <script src="libs/jquery-3.7.1.min.js"></script>
+  <script src="libs/bootstrap.bundle.min.js"></script>
+  <script src="libs/echarts.min.js"></script>
+  <script src="libs/chart.umd.js"></script>
+  <script src="app.js"></script>
+</body>
+
+</html>
