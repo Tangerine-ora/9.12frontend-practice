@@ -10,7 +10,7 @@ async function loadData() {
             throw new Error("HTTP " + res.status);
         }
         const jsonData = await res.json();
-        if (!jsonData.rooms || jsonData.rooms.length === 0) {
+        if (!jsonData || !jsonData.rooms || jsonData.rooms.length === 0) {
             $('#status').text("暂无数据").show();
             return;
         }
@@ -63,7 +63,7 @@ function renderBuildingBar(rooms) {
         barChart = echarts.init(document.querySelector("#building-bar"));
     }
     barChart.setOption({
-        title: { text: "各楼宇自习室总座位数", left: "center" },
+        title: { text: "各楼宇自习室总座位数（单位：个）", left: "center" },
         tooltip: { trigger: "axis" },
         xAxis: { data: buildings },
         yAxis: { name: "座位数", min: 0 },
@@ -100,7 +100,7 @@ function renderStatusPie(rooms) {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-                title: { display: true, text: "自习室房间状态分布" },
+                title: { display: true, text: "自习室房间状态分布（房间数量）" },
                 legend: { position: "bottom" }
             }
         }
