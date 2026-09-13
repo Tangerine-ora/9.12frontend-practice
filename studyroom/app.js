@@ -1,4 +1,5 @@
 const state = { rawData: null };
+let barChart = null;
 
 async function loadData() {
     $('#status').text("加载中...").show();
@@ -17,6 +18,7 @@ async function loadData() {
         $('#status').hide();
 
         renderRoomCards(jsonData.rooms);
+        renderBuildingBar(jsonData.rooms);
 
     } catch (err) {
         $('#status').text("加载失败：" + err.message).show();
@@ -40,6 +42,33 @@ function renderRoomCards(roomList) {
       </div>
     </div>
     `);
+    });
+}
+
+function renderBuildingBar(rooms) {
+    const buildingMap = {};
+    rooms.forEach(r => {
+        if (!buildingMap[r.building]) buildingMap[r.building] = 0;
+        buildingMap[r.building] += r.seats;
+    });
+    const buildings = Object.keys(buildingMap);
+    const seatCounts = buildings.map(b => buildingMap[b]);
+
+    if (!barChart) {
+        barChart = echarts.init(document.querySelector("#building-bar"));
+    }
+    barChart.setOption({
+        title: { text: "各楼宇自习室总座位数", left: "center" },
+        tooltip: { trigger: "axis" },
+        xAxis: { data: buildings },
+        yAxis: { name: "座位数", min: 0 },
+        series: [
+            {
+                name: "总座位",
+                type: "bar",
+                data: seatCounts
+            }
+        ]
     });
 }
 
